@@ -9,6 +9,17 @@ class JogoDaVelha:
             [7, 8, 9]
         ]
 
+    def iniciar(self, jogada, jogador):
+        print(self.velha())
+        while not self.ganhador:
+            retorno = self.escolher_lugar(jogada, jogador)
+            if retorno:
+                print(self.velha())
+                return True
+            else:
+                print(self.velha())
+                return "Jogada inválida"
+
     def velha(self):
         tabuleiro = f"""
         _{self.lugares[0][0]}_|_{self.lugares[0][1]}_|_{self.lugares[0][2]}_
@@ -24,13 +35,9 @@ class JogoDaVelha:
             for j, l in enumerate(k):
                 if lugar == l and isinstance(l, int):
                     self.lugares[i][j] = jogador
+                    return True
         return False
 
 
-
 jogo = JogoDaVelha("X", "O")
-print(jogo.velha())
-jogo.escolher_lugar(1, "X")
-jogo.escolher_lugar(2, "O")
-jogo.escolher_lugar(3, "X")
-print(jogo.velha())
+jogo.iniciar(1, "X")
