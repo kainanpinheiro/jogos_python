@@ -13,7 +13,6 @@ class JogoDaVelha:
         return self.__ganhador
 
     def iniciar(self, jogada, jogador):
-        print(self.velha())
         retorno = self.escolher_lugar(jogada, jogador)
         if retorno:
             print(self.velha())
@@ -65,12 +64,19 @@ class JogoDaVelha:
 
 
 if __name__ == "__main__":
-    jogo = JogoDaVelha("X", "O")
+    jogador1 = input('Jogador1 escolha X ou O: ')
+    if jogador1 == 'O' or jogador1 == 'X':
+        jogador2 = 'X' if jogador1 == 'O' else 'O'
+    print(f"Jogador1 -> {jogador1} \nJogador2 -> {jogador2}")
+    jogo = JogoDaVelha(jogador1, jogador2)
     ganhador = jogo.get_ganhador()
-    jogo.ganhador = True
+    print(jogo.velha())
     while not ganhador:
-        jogo.iniciar(1, "O")
-        jogo.iniciar(4, "O")
-        jogo.iniciar(7, "O")
+        lugar = input("Escolha um lugar (X): ")
+        jogo.iniciar(int(lugar), jogador1)
         ganhador = jogo.get_ganhador()
+        if not ganhador:
+            lugar = input("Escolha um lugar (O): ")
+            jogo.iniciar(int(lugar), jogador2)
+            ganhador = jogo.get_ganhador()
     print('FINALIZADO')
