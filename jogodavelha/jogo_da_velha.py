@@ -3,6 +3,7 @@ class JogoDaVelha:
         self.__jogador1 = jogador1
         self.__jogador2 = jogador2
         self.__ganhador = False
+        self.__deu_velha = False
         self.lugares = [
             [1, 2, 3],
             [4, 5, 6],
@@ -12,8 +13,12 @@ class JogoDaVelha:
     def get_ganhador(self):
         return self.__ganhador
 
+    def get_deu_velha(self):
+        return self.__deu_velha
+
     def iniciar(self, jogada, jogador):
         retorno = self.escolher_lugar(jogada, jogador)
+        self.deu_velha()
         if retorno:
             print(self.velha())
             retorno = self.verificar_ganhador()
@@ -62,6 +67,11 @@ class JogoDaVelha:
     def validar_valores(self, lugar):
         return all(i == lugar[0] for i in lugar)
 
+    def deu_velha(self):
+        self.__deu_velha = all(
+            isinstance(j, str) for i in self.lugares for j in i
+        )
+
 
 if __name__ == "__main__":
     jogador1 = input('Jogador1 escolha X ou O: ')
@@ -70,8 +80,12 @@ if __name__ == "__main__":
     print(f"Jogador1 -> {jogador1} \nJogador2 -> {jogador2}")
     jogo = JogoDaVelha(jogador1, jogador2)
     ganhador = jogo.get_ganhador()
+    deu_velha = False
     print(jogo.velha())
-    while not ganhador:
+    while not ganhador and not deu_velha:
+        deu_velha = jogo.get_deu_velha()
+        if deu_velha:
+            print('DEU VELHA MANO!')
         lugar = input("Escolha um lugar (X): ")
         jogo.iniciar(int(lugar), jogador1)
         ganhador = jogo.get_ganhador()
