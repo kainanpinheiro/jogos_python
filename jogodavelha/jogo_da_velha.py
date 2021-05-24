@@ -21,7 +21,9 @@ class JogoDaVelha:
         self.deu_velha()
         if retorno:
             print(self.velha())
-            retorno = self.verificar_ganhador()
+            ganhador = self.verificar_ganhador(jogador)
+            if ganhador:
+                return ganhador
         else:
             print(self.velha())
             return "Jogada inválida"
@@ -44,7 +46,7 @@ class JogoDaVelha:
                     return True
         return False
 
-    def verificar_ganhador(self):
+    def verificar_ganhador(self, jogador):
         ganhou = list()
 
         # Verifica valores na horizontal
@@ -63,34 +65,48 @@ class JogoDaVelha:
 
         if any(ganhou):
             self.__ganhador = True
+            return jogador
 
     def validar_valores(self, lugar):
         return all(i == lugar[0] for i in lugar)
 
     def deu_velha(self):
         self.__deu_velha = all(
-            isinstance(j, str) for i in self.lugares for j in i
+            isinstance(j, str) for lugar in self.lugares for j in lugar
         )
 
 
 if __name__ == "__main__":
-    jogador1 = input('Jogador1 escolha X ou O: ')
-    if jogador1 == 'O' or jogador1 == 'X':
-        jogador2 = 'X' if jogador1 == 'O' else 'O'
-    print(f"Jogador1 -> {jogador1} \nJogador2 -> {jogador2}")
-    jogo = JogoDaVelha(jogador1, jogador2)
-    ganhador = jogo.get_ganhador()
-    deu_velha = False
-    print(jogo.velha())
-    while not ganhador and not deu_velha:
+    def jogar(vezes):
+        jogador1 = input('Jogador1 escolha X ou O: \n')
+        if jogador1 == 'O' or jogador1 == 'X':
+            jogador2 = 'X' if jogador1 == 'O' else 'O'
+        print(f"Jogador1 -> {jogador1} \nJogador2 -> {jogador2}")
+
+        jogo = JogoDaVelha(jogador1, jogador2)
+
+        print(jogo.velha())
+        ganhou = jogo.get_ganhador()
         deu_velha = jogo.get_deu_velha()
-        if deu_velha:
-            print('DEU VELHA MANO!')
-        lugar = input("Escolha um lugar (X): ")
-        jogo.iniciar(int(lugar), jogador1)
-        ganhador = jogo.get_ganhador()
-        if not ganhador:
-            lugar = input("Escolha um lugar (O): ")
-            jogo.iniciar(int(lugar), jogador2)
-            ganhador = jogo.get_ganhador()
-    print('FINALIZADO')
+
+        n = 0
+
+        while n <= vezes:
+            print(f"PLACAR ->")
+            while not ganhou and not deu_velha:
+                if not deu_velha:
+                    lugar = input(f"Escolha um lugar ({jogador1}): ")
+                    ganhador = jogo.iniciar(int(lugar), jogador1)
+                    ganhou = jogo.get_ganhador()
+                    deu_velha = jogo.get_deu_velha()
+                    if not ganhou and not deu_velha:
+                        lugar = input(f"Escolha um lugar ({jogador2}): ")
+                        ganhador = jogo.iniciar(int(lugar), jogador2)
+                        ganhou = jogo.get_ganhador()
+                        deu_velha = jogo.get_deu_velha()
+            resultado = "DEU VELHA!" if deu_velha else f"{ganhador} GANHOU"
+            print(resultado)
+            n += 1
+
+    vezes = input("Deseja jogar quantas vezes? ")
+    jogar(int(vezes))
